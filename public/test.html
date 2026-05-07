@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试页面</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 20px; }
+        .test-btn {
+            background: #007AFF;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-btn:hover { background: #0066CC; }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+        .file-input { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API 测试页面</h1>
+        
+        <p>步骤 1：上传 5-6 张图片</p>
+        <div class="file-input">
+            <input type="file" id="fileInput" multiple accept="image/*">
+        </div>
+        
+        <button class="test-btn" onclick="testAPI()">测试 API</button>
+        <button class="test-btn" style="background:#34C759" onclick="window.location.href='/index.html'">返回主页面</button>
+        
+        <div id="result">等待测试...</div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            selectedFiles = Array.from(e.target.files);
+            document.getElementById('result').innerText = 
+                `已选择 ${selectedFiles.length} 张图片`;
+        });
+
+        async function testAPI() {
+            if (selectedFiles.length < 5) {
+                alert('请选择至少 5 张图片！');
+                return;
+            }
+
+            document.getElementById('result').innerText = '正在上传...';
+            
+            const formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('images', file);
+            });
+
+            try {
+                console.log('开始请求 /api/analyze');
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                console.log('响应状态:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('响应数据:', result);
+                
+                if (result.success) {
+                    document.getElementById('result').innerText = 
+                        '成功！\n\n' + JSON.stringify(result, null, 2);
+                } else {
+                    document.getElementById('result').innerText = 
+                        '失败：' + (result.error || '未知错误');
+                }
+            } catch (error) {
+                console.error('错误:', error);
+                document.getElementById('result').innerText = 
+                    '错误：\n\n' + error.toString() + '\n\n' + 
+                    '请查看浏览器控制台 (F12)';
+            }
+        }
+    </script>
+</body>
+</html>

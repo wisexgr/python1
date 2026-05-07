@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>朋友圈分析交友助手</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <section id="home" class="page active">
+            <div class="hero">
+                <div class="hero-icon">💝</div>
+                <h1>朋友圈分析交友助手</h1>
+                <p class="subtitle">上传对方的朋友圈截图，AI帮你深度分析，让你更懂TA</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text">
+                        <h3>智能分析</h3>
+                        <p>深度解析性格、兴趣、价值观</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-text">
+                        <h3>话题推荐</h3>
+                        <p>量身定制聊天话题</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>约会建议</h3>
+                        <p>提供个性化约会方案</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="showPage('upload')">开始使用</button>
+        </section>
+
+        <section id="upload" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="showPage('home')">← 返回</button>
+                <h2>上传朋友圈截图</h2>
+            </div>
+
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" multiple accept="image/*" hidden>
+                <div class="upload-content">
+                    <div class="upload-icon">📷</div>
+                    <p class="upload-text">点击或拖拽上传图片</p>
+                    <p class="upload-hint">至少需要上传5张图片</p>
+                </div>
+            </div>
+
+            <div class="image-grid" id="imageGrid"></div>
+
+            <div class="upload-footer">
+                <p class="upload-count"><span id="imageCount">0</span> / 5+ 张图片</p>
+                <button class="btn btn-primary" id="analyzeBtn" disabled onclick="startAnalyze()">
+                    开始分析
+                </button>
+            </div>
+        </section>
+
+        <section id="analyzing" class="page">
+            <div class="analyzing-content">
+                <div class="loading-spinner"></div>
+                <h2>AI 正在分析中...</h2>
+                <p class="analyzing-hint">请稍候，这可能需要几秒钟</p>
+            </div>
+        </section>
+
+        <section id="result" class="page">
+            <div class="header">
+                <button class="back-btn" onclick="resetUpload();showPage('upload')">← 重新上传</button>
+                <h2>分析报告</h2>
+            </div>
+
+            <div class="result-content" id="resultContent"></div>
+
+            <div class="result-actions">
+                <button class="btn btn-primary" onclick="resetUpload();showPage('upload')">再次分析</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
